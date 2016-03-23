@@ -2,7 +2,7 @@
 Udacity Portfolio Course Work
 
 ##### Minimum requirements by priority
-- [ ] Empty stock list message
+- [X] Empty stock list message
 - [ ] Report when a stock is not found while searching
 - [ ] Start activity with ticker symbol Id (E.G. "GOOG")
 - [ ] Request stock history
