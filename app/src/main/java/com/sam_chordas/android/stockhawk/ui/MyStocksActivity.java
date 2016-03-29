@@ -55,6 +55,16 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Context mContext;
     private Cursor mCursor;
 
+    private static final String[] STOCK_COLUMNS = {
+            QuoteColumns._ID,
+            QuoteColumns.SYMBOL,
+            QuoteColumns.BIDPRICE,
+            QuoteColumns.PERCENT_CHANGE,
+            QuoteColumns.CHANGE,
+            QuoteColumns.ISUP
+    };
+    private static final int STOCK_COL_SYMBOL = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,8 +99,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     @Override
                     public void onItemClick(View v, int position) {
                         //TODO:
-                        // do something on item click
-                        Log.v(LOG_TAG, "Clicked " + v);
+                        mCursor.moveToPosition(position);
+                        String stockSym = mCursor.getString(STOCK_COL_SYMBOL);
+                        Intent intent = new Intent(mContext, DetailsActivity.class)
+                                .putExtra(DetailsActivity.STOCK_SYMBOL, stockSym);
+                        startActivity(intent);
                     }
                 }));
         recyclerView.setAdapter(mCursorAdapter);
@@ -218,8 +231,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // This narrows the return to only the stocks that are most current.
         return new CursorLoader(this, QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
+                STOCK_COLUMNS,
                 QuoteColumns.ISCURRENT + " = ?",
                 new String[]{"1"},
                 null);
