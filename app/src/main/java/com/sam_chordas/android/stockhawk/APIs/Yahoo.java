@@ -6,4 +6,5 @@ package com.sam_chordas.android.stockhawk.APIs;
 public class Yahoo {
     public static final String YQL_BASE = "https://query.yahooapis.com/v1/public/yql";
     public static final String YAHOO_FINANCE_QUOTES_TABLE = "yahoo.finance.quotes";
+    public static final String YAHOO_FINANCE_HISTORY_TABLE = "yahoo.finance.historicaldata";
 }
