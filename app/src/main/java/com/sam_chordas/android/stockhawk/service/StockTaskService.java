@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 /**
@@ -32,26 +33,20 @@ import java.net.URLEncoder;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService {
-    private String LOG_TAG = StockTaskService.class.getSimpleName();
-
-    private OkHttpClient client = new OkHttpClient();
-    private Context mContext;
-    private StringBuilder mStoredSymbols = new StringBuilder();
-    private boolean isUpdate;
-
-    @Retention(RetentionPolicy.CALSS)
-    @IntDef({YAHOO_STATUS_OK, YAHOO_STATUS_SERVER_DOWN, YAHOO_STATUS_SERVER_INVALID,  YAHOO_STATUS_UNKNOWN, YAHOO_STATUS_INVALID})
-    public @interface YahooStatus {}
-
     public static final int YAHOO_STATUS_OK = 0;
     public static final int YAHOO_STATUS_SERVER_DOWN = 1;
     public static final int YAHOO_STATUS_SERVER_INVALID = 2;
     public static final int YAHOO_STATUS_UNKNOWN = 3;
     public static final int YAHOO_STATUS_INVALID = 4;
-
+    private String LOG_TAG = StockTaskService.class.getSimpleName();
+    private OkHttpClient client = new OkHttpClient();
+    private Context mContext;
+    private StringBuilder mStoredSymbols = new StringBuilder();
+    private boolean isUpdate;
 
     public StockTaskService() {
     }
+
 
     public StockTaskService(Context context) {
         mContext = context;
@@ -81,7 +76,8 @@ public class StockTaskService extends GcmTaskService {
                             "select * from "
                                     + Yahoo.YAHOO_FINANCE_QUOTES_TABLE
                                     + " where symbol "
-                                    + "in (", "UTF-8"));
+                                    + "in (",
+                            "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -129,11 +125,32 @@ public class StockTaskService extends GcmTaskService {
         urlStringBuilder.append("&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables."
                 + "org%2Falltableswithkeys&callback=");
 
+//        StockTaskServicehttps:
+//        "https://query.yahooapis.com/v1/public/yql?q=select+*+from+yahoo.finance.quotes+where+symbol+in+%28" +
+//                "%22YHOO%22%2C%22AAPL%22%2C%22GOOG%22%2C%22MSFT%22" +
+//                "%29&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
+
+        String oldUrl;
+        try {
+            oldUrl = URLDecoder.decode("https://query.yahooapis.com/v1/public/yql?q=select" +
+                    "%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22YHOO%22" +
+                    "%20and%20startDate%20%3D%20%222009-09-11%22%20and%20endDate%20%3D%20%222010-03-10" +
+                    "%22&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys", "UTF-8");
+            /*
+                https://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.historicaldata where symbol = "YHOO" and startDate = "2009-09-11" and endDate = "2010-03-10"&diagnostics=true&env=store://datatables.org/alltableswithkeys
+             */
+            Log.v(LOG_TAG, oldUrl);
+        } catch (UnsupportedEncodingException e) {
+            Log.e(LOG_TAG, "Could not decode" + e);
+        }
+
+
         String urlString;
         String getResponse;
         int result = GcmNetworkManager.RESULT_FAILURE;
 
         urlString = urlStringBuilder.toString();
+        Log.v(LOG_TAG, urlString);
         try {
             getResponse = fetchData(urlString);
             result = GcmNetworkManager.RESULT_SUCCESS;
@@ -157,6 +174,11 @@ public class StockTaskService extends GcmTaskService {
         Log.v(LOG_TAG, LOG_TAG + urlString);
 
         return result;
+    }
+
+    @Retention(RetentionPolicy.CLASS)
+    @IntDef({YAHOO_STATUS_OK, YAHOO_STATUS_SERVER_DOWN, YAHOO_STATUS_SERVER_INVALID, YAHOO_STATUS_UNKNOWN, YAHOO_STATUS_INVALID})
+    public @interface YahooStatus {
     }
 
 }
