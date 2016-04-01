@@ -1,33 +1,43 @@
 package com.sam_chordas.android.stockhawk.tasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.sam_chordas.android.stockhawk.APIs.Yahoo;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 /**
  * Fetches a stock's history
  */
-public class FetchHistoryTask extends AsyncTask<String, Void, JSONObject> {
+public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
     private static final String LOG_TAG = FetchHistoryTask.class.getSimpleName();
+    private LineChart mChart;
 
     private OkHttpClient client = new OkHttpClient();
 
+    public FetchHistoryTask(LineChart chart) {
+        mChart = chart;
+    }
+
     @Override
-    protected JSONObject doInBackground(String... params) {
-        if (params.length < 3) {
-            assert false;
-            return null;
-        }
+    protected JSONArray doInBackground(String... params) {
+        if (params.length != 3) throw new AssertionError();
         String symbol = params[0];
         String startDate = params[1];
         String endDate = params[2];
@@ -41,30 +51,56 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONObject> {
                                     + Yahoo.YAHOO_FINANCE_HISTORY_TABLE
                                     + " where symbol = \"" + symbol + "\""
                                     + " and startDate = \"" + startDate + "\""
-                                    + " and endDate = \"" + endDate
-                                    + "\"&diagnostics=true&env=store://datatables.org/alltableswithkeys",
+                                    + " and endDate = \"" + endDate + "\"",
                             "UTF-8"));
+            urlStringBuilder.append("&diagnostics=true&env="); // web service does not parse ampersands well...
+            urlStringBuilder.append(
+                    URLEncoder.encode("store://datatables.org/alltableswithkeys",
+                            "UTF-8"));
+            urlStringBuilder.append("&format=json");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-/*
-https://query.yahooapis.com/v1/public/yql?q=select+*+from+yahoo.finance.historicaldata+where+symbol+%3D+YHOO+and+startDate+%3D+%222009-08-11%22++and+endDate+%3D+%222010-08-11%22%26diagnostics%3Dtrue%26env%3Dstore%3A%2F%2Fdatatables.org%2Falltableswithkeys
-yahoo.finance.historicaldata
-yahoo.finance.historicaldata
- */
-        Log.v(LOG_TAG, ": " + urlStringBuilder.toString());
-
-        JSONObject jsonObject = null;
-        String fetchDataResponse = null;
+        JSONArray results = null;
         try {
-            fetchDataResponse = fetchData(urlStringBuilder.toString());
-        } catch (IOException e) {
+            String fetchDataResponse = fetchData(urlStringBuilder.toString());
+            JSONObject jsonObject = (JSONObject) new JSONObject(fetchDataResponse).get("query");
+            jsonObject = jsonObject.getJSONObject("results");
+
+            results = jsonObject.getJSONArray("quote");
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        Log.v(LOG_TAG, ": " + fetchDataResponse);
 
-        return jsonObject;
+        return results;
+    }
+
+    @Override
+    protected void onPostExecute(JSONArray results) {
+        ArrayList<String> dates = new ArrayList<>();
+        ArrayList<Entry> values = new ArrayList<>();
+
+        for (int i = 0; i < results.length(); i++) {
+            try {
+                JSONObject jObj = results.getJSONObject(i);
+                dates.add(jObj.getString("Date"));
+                Entry e = new Entry(((float) jObj.getDouble("Close")), i);
+                values.add(e);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            i++;
+        }
+
+        LineDataSet setClosingPrices = new LineDataSet(values, "Closing Prices");
+        setClosingPrices.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(setClosingPrices);
+        LineData data = new LineData(dates, dataSets);
+        mChart.setData(data);
+        mChart.invalidate();
     }
 
     private String fetchData(String url) throws IOException {
@@ -74,4 +110,5 @@ yahoo.finance.historicaldata
         Response response = client.newCall(request).execute();
         return response.body().string();
     }
+
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.tasks.FetchHistoryTask;
 
@@ -22,7 +23,7 @@ public class DetailsActivity extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.activity_detail_stock_symbol);
         tv.setText(mStockSymbol);
 
-        FetchHistoryTask fht = new FetchHistoryTask();
+        FetchHistoryTask fht = new FetchHistoryTask((LineChart) findViewById(R.id.line_chart_view));
         fht.execute(mStockSymbol, "2009-08-11", "2010-08-11");
     }
 
