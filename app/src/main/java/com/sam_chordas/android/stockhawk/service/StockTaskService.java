@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 /**
@@ -125,32 +124,11 @@ public class StockTaskService extends GcmTaskService {
         urlStringBuilder.append("&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables."
                 + "org%2Falltableswithkeys&callback=");
 
-//        StockTaskServicehttps:
-//        "https://query.yahooapis.com/v1/public/yql?q=select+*+from+yahoo.finance.quotes+where+symbol+in+%28" +
-//                "%22YHOO%22%2C%22AAPL%22%2C%22GOOG%22%2C%22MSFT%22" +
-//                "%29&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
-
-        String oldUrl;
-        try {
-            oldUrl = URLDecoder.decode("https://query.yahooapis.com/v1/public/yql?q=select" +
-                    "%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22YHOO%22" +
-                    "%20and%20startDate%20%3D%20%222009-09-11%22%20and%20endDate%20%3D%20%222010-03-10" +
-                    "%22&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys", "UTF-8");
-            /*
-                https://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.historicaldata where symbol = "YHOO" and startDate = "2009-09-11" and endDate = "2010-03-10"&diagnostics=true&env=store://datatables.org/alltableswithkeys
-             */
-            Log.v(LOG_TAG, oldUrl);
-        } catch (UnsupportedEncodingException e) {
-            Log.e(LOG_TAG, "Could not decode" + e);
-        }
-
-
         String urlString;
         String getResponse;
         int result = GcmNetworkManager.RESULT_FAILURE;
 
         urlString = urlStringBuilder.toString();
-        Log.v(LOG_TAG, urlString);
         try {
             getResponse = fetchData(urlString);
             result = GcmNetworkManager.RESULT_SUCCESS;
@@ -166,12 +144,12 @@ public class StockTaskService extends GcmTaskService {
                         Utils.quoteJsonToContentVals(getResponse));
             } catch (RemoteException | OperationApplicationException e) {
                 Log.e(LOG_TAG, "Error applying batch insert", e);
+            } catch (NullPointerException e) {
+                result = GcmNetworkManager.RESULT_FAILURE;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Log.v(LOG_TAG, LOG_TAG + urlString);
 
         return result;
     }

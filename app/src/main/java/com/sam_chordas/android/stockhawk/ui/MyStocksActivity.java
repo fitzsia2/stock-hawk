@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +38,15 @@ import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallb
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CURSOR_LOADER_ID = 0;
-
+    private static final String[] STOCK_COLUMNS = {
+            QuoteColumns._ID,
+            QuoteColumns.SYMBOL,
+            QuoteColumns.BIDPRICE,
+            QuoteColumns.PERCENT_CHANGE,
+            QuoteColumns.CHANGE,
+            QuoteColumns.ISUP
+    };
+    private static final int STOCK_COL_SYMBOL = 1;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -54,16 +61,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
     private Cursor mCursor;
-
-    private static final String[] STOCK_COLUMNS = {
-            QuoteColumns._ID,
-            QuoteColumns.SYMBOL,
-            QuoteColumns.BIDPRICE,
-            QuoteColumns.PERCENT_CHANGE,
-            QuoteColumns.CHANGE,
-            QuoteColumns.ISUP
-    };
-    private static final int STOCK_COL_SYMBOL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +95,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
-                        //TODO:
                         mCursor.moveToPosition(position);
                         String stockSym = mCursor.getString(STOCK_COL_SYMBOL);
                         Intent intent = new Intent(mContext, DetailsActivity.class)
@@ -125,10 +121,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                 public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                                     // On FAB click, receive user input. Make sure the stock doesn't already exist
                                     // in the DB and proceed accordingly
+                                    String symbol = input.toString().toUpperCase();
                                     Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                                             new String[]{QuoteColumns.SYMBOL},
                                             QuoteColumns.SYMBOL + "= ?",
-                                            new String[]{input.toString()},
+                                            new String[]{symbol},
                                             null);
 
                                     assert c != null;
@@ -142,7 +139,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                     } else {
                                         // Add the stock to DB
                                         mServiceIntent.putExtra("tag", "add");
-                                        mServiceIntent.putExtra("symbol", input.toString());
+                                        mServiceIntent.putExtra("symbol", symbol);
                                         startService(mServiceIntent);
                                         c.close();
                                     }
@@ -150,6 +147,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                             })
                             .show();
                 } else {
+                    TextView emptyText = (TextView) findViewById(R.id.recycler_view_empty);
+                    assert emptyText != null;
+                    emptyText.setText(R.string.no_internet_msg);
                     networkToast();
                 }
 
