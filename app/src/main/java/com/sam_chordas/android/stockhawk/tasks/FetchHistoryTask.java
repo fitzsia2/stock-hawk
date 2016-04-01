@@ -1,6 +1,7 @@
 package com.sam_chordas.android.stockhawk.tasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
@@ -66,6 +67,10 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
         try {
             String fetchDataResponse = fetchData(urlStringBuilder.toString());
             JSONObject jsonObject = (JSONObject) new JSONObject(fetchDataResponse).get("query");
+
+            if (jsonObject.getInt("count") == 0)
+                return null;
+
             jsonObject = jsonObject.getJSONObject("results");
 
             results = jsonObject.getJSONArray("quote");
@@ -78,6 +83,11 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
 
     @Override
     protected void onPostExecute(JSONArray results) {
+        if (results == null) {
+            Log.e(LOG_TAG, "History results were null!");
+            return;
+        }
+
         ArrayList<String> dates = new ArrayList<>();
         ArrayList<Entry> values = new ArrayList<>();
 
