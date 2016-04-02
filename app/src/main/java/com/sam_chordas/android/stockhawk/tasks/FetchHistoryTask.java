@@ -65,6 +65,7 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
 
         JSONArray results = null;
         try {
+            Log.v(LOG_TAG, urlStringBuilder.toString());
             String fetchDataResponse = fetchData(urlStringBuilder.toString());
             JSONObject jsonObject = (JSONObject) new JSONObject(fetchDataResponse).get("query");
 
@@ -100,7 +101,6 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            i++;
         }
 
         LineDataSet setClosingPrices = new LineDataSet(values, "Closing Prices");
