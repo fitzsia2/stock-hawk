@@ -36,4 +36,5 @@ dependencies {
     transitive = true
   }
   compile 'com.github.PhilJay:MPAndroidChart:v2.2.3'
+    compile 'com.diogobernardino:williamchart:2.2'
 }

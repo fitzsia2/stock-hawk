@@ -3,12 +3,8 @@ package com.sam_chordas.android.stockhawk.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.db.chart.model.LineSet;
+import com.db.chart.view.LineChartView;
 import com.sam_chordas.android.stockhawk.APIs.Yahoo;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -21,18 +17,17 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 /**
  * Fetches a stock's history
  */
 public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
     private static final String LOG_TAG = FetchHistoryTask.class.getSimpleName();
-    private LineChart mChart;
+    private LineChartView mChart;
 
     private OkHttpClient client = new OkHttpClient();
 
-    public FetchHistoryTask(LineChart chart) {
+    public FetchHistoryTask(LineChartView chart) {
         mChart = chart;
     }
 
@@ -89,43 +84,28 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
             return;
         }
 
-        // Add the data to our array list.
-        ArrayList<String> dates = new ArrayList<>();
-        ArrayList<Entry> closingValues = new ArrayList<>();
-//        for (int i = 0; i < results.length(); i++) {
-        for (int i = results.length() - 1; i >= 0; i--) {
+        int count = results.length();
+
+        // Create the data set
+        String[] dates = new String[count];
+        float[] values = new float[count];
+        for (int i = 0; i < results.length(); i++) {
             try {
                 JSONObject jObj = results.getJSONObject(i);
 
                 // Add the date
-                dates.add(jObj.getString("Date"));
-
-                int index = results.length() - 1 - i;
+                dates[i] = jObj.getString("Date");
 
                 // Add the closing cost
-                Entry e = new Entry(((float) jObj.getDouble("Close")), index);
-                closingValues.add(e);
+                values[i] = (float) jObj.getDouble("Close");
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
-        // Create data sets
-        LineDataSet closingDataSet = new LineDataSet(closingValues, "Closing Prices");
-        closingDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-
-
-        // Add our data sets
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(closingDataSet);
-
-        LineData data = new LineData(dates, dataSets);
-
-        data.setDrawValues(false);
-
-        mChart.setData(data);
-        mChart.invalidate();
+        LineSet dataSet = new LineSet(dates, values);
+        mChart.addData(dataSet);
+        mChart.show();
     }
 
     private String fetchData(String url) throws IOException {

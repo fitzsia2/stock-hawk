@@ -18,7 +18,7 @@
         android:textAppearance="@android:style/TextAppearance.Large"
         tools:text="GOOG" />
 
-    <com.github.mikephil.charting.charts.LineChart
+    <com.db.chart.view.LineChartView
         android:id="@+id/line_chart_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"

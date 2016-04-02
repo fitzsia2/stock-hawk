@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
+import com.db.chart.view.LineChartView;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.tasks.FetchHistoryTask;
 
@@ -37,11 +37,10 @@ public class DetailsActivity extends AppCompatActivity {
         tv.setText(mStockSymbol);
 
         // Find our chart and query for a years worth of data
-        LineChart lc = (LineChart) findViewById(R.id.line_chart_view);
+        LineChartView lc = (LineChartView) findViewById(R.id.line_chart_view);
         assert lc != null;
-        FetchHistoryTask fht = new FetchHistoryTask((LineChart) findViewById(R.id.line_chart_view));
+        FetchHistoryTask fht = new FetchHistoryTask((LineChartView) findViewById(R.id.line_chart_view));
         fht.execute(mStockSymbol, startDate, endDate);
-        lc.setDescription("");
     }
 
 }
