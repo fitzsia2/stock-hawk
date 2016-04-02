@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,17 +13,85 @@
 
     <TextView
         android:id="@+id/activity_detail_stock_symbol"
+        style="@style/StockSymbolTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:textAppearance="@android:style/TextAppearance.Large"
         tools:text="GOOG" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/line_chart_view"
+    <android.support.v7.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:backgroundTintMode="add" />
+        app:columnCount="4"
+        app:orientation="horizontal">
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/material_blue_500"
+            android:paddingBottom="@dimen/abc_list_item_padding_horizontal_material"
+            android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
+            android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
+            android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+            android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
+            android:paddingTop="@dimen/abc_list_item_padding_horizontal_material"
+            app:layout_columnSpan="4"
+            app:layout_rowWeight="1"
+            tools:ignore="UnusedAttribute" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            app:layout_columnSpan="4">
+
+            <RadioButton
+                android:id="@+id/five_year_history_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:text="5Yr"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill" />
+
+
+            <RadioButton
+                android:id="@+id/one_year_history_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:text="1Yr"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill" />
+
+
+            <RadioButton
+                android:id="@+id/six_month_history_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:text="6Mo"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill" />
+
+
+            <RadioButton
+                android:id="@+id/one_week_history_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:text="3Mo"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill" />
+        </RadioGroup>
+
+    </android.support.v7.widget.GridLayout>
 </LinearLayout>
