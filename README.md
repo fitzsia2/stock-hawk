@@ -12,7 +12,6 @@ Udacity Portfolio Course Work
 - [X] Create history graph
 - [ ] Report when we cannot query historical data
 - [ ] Materialize history view
-- [ ] Materialize history view
 - [ ] Add content descriptions and focus
 - [ ] Add start and end to XML text fields
 - [ ] Add translation hints
