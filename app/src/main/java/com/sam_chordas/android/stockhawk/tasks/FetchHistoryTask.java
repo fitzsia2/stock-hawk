@@ -89,26 +89,41 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
             return;
         }
 
+        // Add the data to our array list.
         ArrayList<String> dates = new ArrayList<>();
-        ArrayList<Entry> values = new ArrayList<>();
-
-        for (int i = 0; i < results.length(); i++) {
+        ArrayList<Entry> closingValues = new ArrayList<>();
+//        for (int i = 0; i < results.length(); i++) {
+        for (int i = results.length() - 1; i >= 0; i--) {
             try {
                 JSONObject jObj = results.getJSONObject(i);
+
+                // Add the date
                 dates.add(jObj.getString("Date"));
-                Entry e = new Entry(((float) jObj.getDouble("Close")), i);
-                values.add(e);
+
+                int index = results.length() - 1 - i;
+
+                // Add the closing cost
+                Entry e = new Entry(((float) jObj.getDouble("Close")), index);
+                closingValues.add(e);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        LineDataSet setClosingPrices = new LineDataSet(values, "Closing Prices");
-        setClosingPrices.setAxisDependency(YAxis.AxisDependency.LEFT);
+        // Create data sets
+        LineDataSet closingDataSet = new LineDataSet(closingValues, "Closing Prices");
+        closingDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
+
+        // Add our data sets
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(setClosingPrices);
+        dataSets.add(closingDataSet);
+
         LineData data = new LineData(dates, dataSets);
+
+        data.setDrawValues(false);
+
         mChart.setData(data);
         mChart.invalidate();
     }
