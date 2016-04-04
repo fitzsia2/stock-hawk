@@ -1,14 +1,31 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Stock Hawk</string>
 
-    <string name="action_example">Example action</string>
-
-    <string name="action_settings">Settings</string>
+    <!-- Used for the content description of the button on the action bar that changes between
+    price changes in currency and percents -->
     <string name="action_change_units">Change Units</string>
+
+    <!-- The title of the dialog that appears when you add a new stock -->
     <string name="symbol_search">Symbol Search</string>
+
+    <!-- The description of the dialog for adding a new stock-->
     <string name="content_test">Search for a Stock Symbol</string>
-    <string name="input_hint">FB</string>
-    <string name="input_prefill"></string>
+    <string name="input_hint" translatable="false">FB</string>
+    <string name="empty_input_prefill" />
+
+    <!-- Message that appears when the network is unavailable -->
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
     <string name="no_internet_msg">No internet connection</string>
+
+    <!-- Content description for the button that adds stocks -->
+    <string name="add_stock_button_content_description">Add new stock</string>
+
+    <!-- The message that appears when the list of stocks is empty -->
+    <string name="empty_stock_list_text_view">Try adding some stocks!</string>
+
+    <!-- A11y -->
+    <string name="a11y_stock">Stock: <xliff:g id="symbol">%1$s</xliff:g></string>
+    <string name="a11y_price">Price: <xliff:g id="price">%1$s</xliff:g></string>
+    <string name="a11y_change">Change: <xliff:g id="change">%1$s</xliff:g></string>
+    <string name="a11y_percent_change">Percent Change: <xliff:g id="percent_change">%1$s</xliff:g></string>
 </resources>
