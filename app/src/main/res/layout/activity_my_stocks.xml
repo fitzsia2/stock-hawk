@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Try adding some stocks!"
+        android:text="@string/empty_stock_list_text_view"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:visibility="visible" />
 
@@ -22,7 +22,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:contentDescription="@string/add_stock_button_content_description"
         android:src="@drawable/ic_add_white_24dp"
