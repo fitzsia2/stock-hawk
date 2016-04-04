@@ -47,17 +47,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             QuoteColumns.ISUP
     };
     private static final int STOCK_COL_SYMBOL = 1;
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private static String LOG_TAG = MyStocksActivity.class.getSimpleName();
-    boolean mIsConnected;
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
+    private boolean mIsConnected;
     private CharSequence mTitle;
     private Intent mServiceIntent;
-    private ItemTouchHelper mItemTouchHelper;
     private QuoteCursorAdapter mCursorAdapter;
     private Context mContext;
     private Cursor mCursor;
@@ -158,7 +150,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         });
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mCursorAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         mTitle = getTitle();
