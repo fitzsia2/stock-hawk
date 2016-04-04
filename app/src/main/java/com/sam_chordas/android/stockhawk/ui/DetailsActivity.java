@@ -13,10 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity {
-    static final String LOG_TAG = DetailsActivity.class.getSimpleName();
     static final String STOCK_SYMBOL = "stock_symbol";
-
-    private String mStockSymbol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +28,10 @@ public class DetailsActivity extends AppCompatActivity {
         gregToday.roll(GregorianCalendar.YEAR, -1);
         String startDate = sdf.format(gregToday.getTime());
 
-        // Get our stock symbol
-        mStockSymbol = getIntent().getStringExtra(STOCK_SYMBOL);
+        // Get our stock symbol and company name
+        String mStockSymbol = getIntent().getStringExtra(STOCK_SYMBOL);
         TextView tv = (TextView) findViewById(R.id.activity_detail_stock_symbol);
+        assert tv != null;
         tv.setText(mStockSymbol);
 
         // Find our chart and query for a years worth of data
