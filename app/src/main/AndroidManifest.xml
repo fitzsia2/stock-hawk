@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.MyStocksActivity"
+            android:name=".ui.activities.MyStocksActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +43,7 @@
             android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
             android:exported="false" />
 
-        <activity android:name=".ui.DetailsActivity" />
+        <activity android:name=".ui.activities.DetailsActivity" />
     </application>
 
 </manifest>

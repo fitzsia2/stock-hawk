@@ -36,6 +36,22 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
         mChart = chart;
     }
 
+
+    /*--------------------------------------------
+        Interface method
+     -------------------------------------------*/
+    private Callback mCallbackCaller;
+
+    public void setCallbackCaller(Callback callbackCaller) {
+        mCallbackCaller = callbackCaller;
+    }
+
+    public interface Callback {
+        void loadedDetails(@Yahoo.YahooStatus int status);
+    }
+    /*------------------------------------------*/
+
+
     @Override
     protected JSONArray doInBackground(String... params) {
         if (params.length != 3) throw new AssertionError();
@@ -107,6 +123,7 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
                 closingValues.add(e);
 
             } catch (JSONException e) {
+                mCallbackCaller.loadedDetails(Yahoo.YAHOO_STATUS_SERVER_INVALID);
                 e.printStackTrace();
             }
         }
@@ -126,6 +143,9 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
 
         mChart.setData(data);
         mChart.invalidate();
+
+        mCallbackCaller.loadedDetails(Yahoo.YAHOO_STATUS_OK);
+
     }
 
     private String fetchData(String url) throws IOException {

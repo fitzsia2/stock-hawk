@@ -1,4 +1,4 @@
-package com.sam_chordas.android.stockhawk.ui;
+package com.sam_chordas.android.stockhawk.ui.activities;
 
 import android.app.LoaderManager;
 import android.content.Context;
