@@ -24,8 +24,16 @@
     <string name="empty_stock_list_text_view">Try adding some stocks!</string>
 
     <!-- A11y -->
-    <string name="a11y_stock">Stock: <xliff:g id="symbol">%1$s</xliff:g></string>
-    <string name="a11y_price">Price: <xliff:g id="price">%1$s</xliff:g></string>
-    <string name="a11y_change">Change: <xliff:g id="change">%1$s</xliff:g></string>
-    <string name="a11y_percent_change">Percent Change: <xliff:g id="percent_change">%1$s</xliff:g></string>
+    <string name="a11y_stock">Stock:
+        <xliff:g id="symbol">%1$s</xliff:g>
+    </string>
+    <string name="a11y_price">Price:
+        <xliff:g id="price">%1$s</xliff:g>
+    </string>
+    <string name="a11y_change">Change:
+        <xliff:g id="change">%1$s</xliff:g>
+    </string>
+    <string name="a11y_percent_change">Percent Change:
+        <xliff:g id="percent_change">%1$s</xliff:g>
+    </string>
 </resources>
