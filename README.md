@@ -10,6 +10,10 @@ Udacity Portfolio Course Work
 - [X] Start activity with ticker symbol Id (E.G. "GOOG")
 - [X] Request stock history
 - [X] Create history graph
+- [ ] Add layouts for tablets
+    - [ ] Main activity
+    - [X] detail activity
+- [ ] Add loading view to details activity
 - [ ] Report when we cannot query historical data
 - [ ] Materialize history view
 - [ ] Add content descriptions and focus
