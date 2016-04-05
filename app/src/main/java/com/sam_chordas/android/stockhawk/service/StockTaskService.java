@@ -6,7 +6,6 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
-import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -22,8 +21,6 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.net.URLEncoder;
 
 /**
@@ -32,20 +29,18 @@ import java.net.URLEncoder;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService {
-    public static final int YAHOO_STATUS_OK = 0;
-    public static final int YAHOO_STATUS_SERVER_DOWN = 1;
-    public static final int YAHOO_STATUS_SERVER_INVALID = 2;
-    public static final int YAHOO_STATUS_UNKNOWN = 3;
-    public static final int YAHOO_STATUS_INVALID = 4;
     private String LOG_TAG = StockTaskService.class.getSimpleName();
     private OkHttpClient client = new OkHttpClient();
     private Context mContext;
     private StringBuilder mStoredSymbols = new StringBuilder();
     private boolean isUpdate;
 
+
+    /**
+     * public constructors
+     */
     public StockTaskService() {
     }
-
 
     public StockTaskService(Context context) {
         mContext = context;
@@ -153,11 +148,6 @@ public class StockTaskService extends GcmTaskService {
         }
 
         return result;
-    }
-
-    @Retention(RetentionPolicy.CLASS)
-    @IntDef({YAHOO_STATUS_OK, YAHOO_STATUS_SERVER_DOWN, YAHOO_STATUS_SERVER_INVALID, YAHOO_STATUS_UNKNOWN, YAHOO_STATUS_INVALID})
-    public @interface YahooStatus {
     }
 
 }
