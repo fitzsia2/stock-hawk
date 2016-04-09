@@ -13,11 +13,15 @@ Udacity Portfolio Course Work
 - [ ] Add layouts for tablets
     - [ ] Main activity
     - [X] detail activity
-- [ ] Add loading view to details activity
+- [X] Add loading view to details activity
 - [ ] Report when we cannot query historical data
 - [ ] Materialize history view
-- [ ] Add content descriptions and focus
-- [ ] Add start and end to XML text fields
-- [ ] Add translation hints
+- [X] Add content descriptions and focus
+- [X] Add start and end to XML text fields
+- [X] Add translation hints
 - [ ] Create a widget
-- [ ] Report when the network is unreachable
+    - [X] Use 'created' column
+    - [X] Setup broadcast receiver
+    - [X] Send broadcast when data is retrieved
+    - [ ] Setup StackView
+- [X] Report when the network is unreachable

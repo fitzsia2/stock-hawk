@@ -1,7 +1,9 @@
 package com.sam_chordas.android.stockhawk.service;
 
+import android.content.ContentProviderResult;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -15,6 +17,7 @@ import com.sam_chordas.android.stockhawk.APIs.Yahoo;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.widget.StocksWidgetProvider;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -108,6 +111,7 @@ public class StockTaskService extends GcmTaskService {
             isUpdate = false;
             // get symbol from params.getExtra and build query
             String stockInput = params.getExtras().getString("symbol");
+            Log.v(LOG_TAG, "Searching for " + stockInput);
             try {
                 urlStringBuilder.append(URLEncoder.encode("\"" + stockInput + "\")", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
@@ -136,13 +140,27 @@ public class StockTaskService extends GcmTaskService {
                     mContext.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
                             null, null);
                 }
-                mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
+                ContentProviderResult[] updated = mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
                         Utils.quoteJsonToContentVals(getResponse));
+
+                Log.v(LOG_TAG, "applyBatch() returned: " + updated.length);
+
+                // If we updated some records, inform our widget
+                if (updated.length > 0) {
+                    Intent intent = new Intent(mContext, StocksWidgetProvider.class)
+                            .setPackage(mContext.getPackageName());
+                    intent.setAction(StocksWidgetProvider.ACTION_DATA_UPDATED);
+                    mContext.sendBroadcast(intent);
+                }
+
             } catch (RemoteException | OperationApplicationException e) {
                 Log.e(LOG_TAG, "Error applying batch insert", e);
             } catch (NullPointerException e) {
+                Log.e(LOG_TAG, "Null pointer", e);
                 result = GcmNetworkManager.RESULT_FAILURE;
             }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
