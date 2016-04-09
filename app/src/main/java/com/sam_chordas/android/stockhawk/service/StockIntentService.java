@@ -13,6 +13,8 @@ import com.google.android.gms.gcm.TaskParams;
 
 /**
  * Created by sam_chordas on 10/1/15.
+ *
+ * Handles running our stock task service.
  */
 public class StockIntentService extends IntentService {
     private Context mContext;
@@ -43,7 +45,10 @@ public class StockIntentService extends IntentService {
         }
         // We can call OnRunTask from the intent service to force it to run immediately instead of
         // scheduling a task.
-        if (stockTaskService.onRunTask(new TaskParams(intent.getStringExtra("tag"), args)) == GcmNetworkManager.RESULT_FAILURE) {
+        int runResult = stockTaskService.onRunTask(new TaskParams(intent.getStringExtra("tag"), args));
+
+        // Display a toast if there was a failure
+        if (runResult == GcmNetworkManager.RESULT_FAILURE) {
             String result = "Could not find requested stock symbol: " + intent.getStringExtra("symbol");
             mHandler.post(new DisplayToast(result));
         }
