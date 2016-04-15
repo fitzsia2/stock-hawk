@@ -8,7 +8,7 @@ import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.ui.fragments.DetailFragment;
 
 public class DetailsActivity extends AppCompatActivity {
-    static final String STOCK_SYMBOL = "stock_symbol";
+    public static final String STOCK_SYMBOL = "stock_symbol";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

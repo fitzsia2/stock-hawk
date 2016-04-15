@@ -9,4 +9,5 @@
 
     <dimen name="widget_text_size">18sp</dimen>
     <dimen name="widget_margin">0dp</dimen>
+    <dimen name="widget_detail_width">84dp</dimen>
 </resources>

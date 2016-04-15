@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/simple_price_widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_background"
     android:padding="@dimen/widget_margin">
 
     <LinearLayout
-        android:id="@+id/widget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        tools:layout_height="48dp"
-        tools:layout_width="110dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/widget_stock_symbol"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="4"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="@dimen/widget_text_size"
-            tools:text="GOOG" />
+            android:text="@string/app_name"
+            android:textAppearance="?android:textAppearanceSmall" />
+
+        <ListView
+            android:id="@+id/simple_price_stack_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateFirstView="true"
+            android:animateLayoutChanges="true" />
 
         <TextView
-            android:id="@+id/widget_stock_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/simple_price_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@drawable/percent_change_pill"
-            android:gravity="center"
-            android:paddingEnd="3dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
-            android:paddingStart="3dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="@dimen/widget_text_size"
-            tools:text="$4.00" />
-
+            android:orientation="horizontal"
+            android:text="No stocks :("
+            tools:layout_height="48dp"
+            tools:layout_width="110dp" />
     </LinearLayout>
 </FrameLayout>

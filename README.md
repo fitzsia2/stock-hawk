@@ -23,5 +23,7 @@ Udacity Portfolio Course Work
     - [X] Use 'created' column
     - [X] Setup broadcast receiver
     - [X] Send broadcast when data is retrieved
-    - [ ] Setup StackView
+    - [ ] Setup ListView
+- [ ] Make sure widget updates with new stocks
+- [ ] Add content descriptions for widget
 - [X] Report when the network is unreachable
