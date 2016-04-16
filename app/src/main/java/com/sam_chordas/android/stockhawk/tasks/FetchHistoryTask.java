@@ -102,6 +102,7 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
     protected void onPostExecute(JSONArray results) {
         if (results == null) {
             Log.e(LOG_TAG, "History results were null!");
+            mCallbackCaller.loadedDetails(Yahoo.YAHOO_STATUS_INVALID);
             return;
         }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:initialKeyguardLayout="@layout/widget_price"
-    android:initialLayout="@layout/widget_price"
+    android:initialKeyguardLayout="@layout/widget_stock_list"
+    android:initialLayout="@layout/widget_stock_list"
     android:minHeight="110dp"
     android:minWidth="180dp"
     android:previewImage="@drawable/widget_preview"

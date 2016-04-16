@@ -20,7 +20,7 @@ public class SimplePriceRemoteViewsService extends RemoteViewsService {
     static private final String LOG_TAG = SimplePriceRemoteViewsService.class.getSimpleName();
 
     @Override
-    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+    public RemoteViewsFactory onGetViewFactory(final Intent intent) {
         return new RemoteViewsFactory() {
             private final String[] QUOTE_COLUMNS = {
                     "DISTINCT " + QuoteColumns.SYMBOL,
@@ -89,9 +89,8 @@ public class SimplePriceRemoteViewsService extends RemoteViewsService {
                     return null;
                 }
                 RemoteViews views = new RemoteViews(getPackageName(),
-                        R.layout.simple_price);
+                        R.layout.widget_stock_list_item);
 
-                mCursor.moveToPosition(position);
                 String stockSymbol = mCursor.getString(COL_SYMBOL);
                 String stockPrice = "$" + mCursor.getString(COL_PRICE);
                 String stockChange = mCursor.getString(COL_PER_CHANGE);
@@ -101,15 +100,16 @@ public class SimplePriceRemoteViewsService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_stock_change, stockChange);
 
                 // Setup our on-click
-                final Intent fillInIntent = new Intent(getApplicationContext(), DetailsActivity.class)
-                        .putExtra(DetailsActivity.STOCK_SYMBOL, stockSymbol);
-                views.setOnClickFillInIntent(R.id.widget_stack_item, fillInIntent);
+                final Intent fillInIntent = new Intent();
+                fillInIntent.putExtra(DetailsActivity.STOCK_SYMBOL, stockSymbol);
+
+                views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
                 return views;
             }
 
             @Override
             public RemoteViews getLoadingView() {
-                return new RemoteViews(getPackageName(), R.layout.simple_price);
+                return new RemoteViews(getPackageName(), R.layout.widget_stock_list_item);
             }
 
             @Override
