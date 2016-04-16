@@ -22,14 +22,14 @@ public class SimplePriceRemoteViewsService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(final Intent intent) {
         return new RemoteViewsFactory() {
+            private static final int COL_SYMBOL = 0;
+            private static final int COL_PRICE = 1;
+            private static final int COL_PER_CHANGE = 2;
             private final String[] QUOTE_COLUMNS = {
                     "DISTINCT " + QuoteColumns.SYMBOL,
                     QuoteColumns.BIDPRICE,
                     QuoteColumns.PERCENT_CHANGE,
             };
-            private static final int COL_SYMBOL = 0;
-            private static final int COL_PRICE = 1;
-            private static final int COL_PER_CHANGE = 2;
             private Cursor mCursor;
 
             @Override
@@ -98,6 +98,10 @@ public class SimplePriceRemoteViewsService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_stock_symbol, stockSymbol);
                 views.setTextViewText(R.id.widget_stock_price, stockPrice);
                 views.setTextViewText(R.id.widget_stock_change, stockChange);
+
+                views.setContentDescription(R.id.widget_stock_symbol, stockSymbol);
+                views.setContentDescription(R.id.widget_stock_price, stockPrice);
+                views.setContentDescription(R.id.widget_stock_change, stockChange);
 
                 // Setup our on-click
                 final Intent fillInIntent = new Intent();
