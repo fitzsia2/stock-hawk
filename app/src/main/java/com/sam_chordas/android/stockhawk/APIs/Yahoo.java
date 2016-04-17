@@ -17,6 +17,17 @@ public class Yahoo {
     public static final int YAHOO_STATUS_SERVER_INVALID = 2;
     public static final int YAHOO_STATUS_UNKNOWN = 3;
     public static final int YAHOO_STATUS_INVALID = 4;
+    public static final String YAHOO_JSON_FIELD_QUERY = "query";
+    public static final String YAHOO_JSON_FIELD_COUNT = "count";
+    public static final String YAHOO_JSON_FIELD_CREATED = "created";
+    public static final String YAHOO_JSON_FIELD_RESULTS = "results";
+    public static final String YAHOO_JSON_FIELD_QUOTE = "quote";
+    public static final String YAHOO_JSON_FIELD_DETAIL_CHANGE = "Change";
+    public static final String YAHOO_JSON_FIELD_DETAIL_SYMBOL = "symbol";
+    public static final String YAHOO_JSON_FIELD_DETAIL_BID = "Bid";
+    public static final String YAHOO_JSON_FIELD_DETAIL_CLOSE = "Close";
+    public static final String YAHOO_JSON_FIELD_DETAIL_DATE = "Date";
+    public static final String YAHOO_JSON_FIELD_DETAIL_PERCENTCHANGE = "ChangeinPercent";
     @Retention(RetentionPolicy.CLASS)
     @IntDef({YAHOO_STATUS_OK, YAHOO_STATUS_SERVER_DOWN, YAHOO_STATUS_SERVER_INVALID, YAHOO_STATUS_UNKNOWN, YAHOO_STATUS_INVALID})
     public @interface YahooStatus {

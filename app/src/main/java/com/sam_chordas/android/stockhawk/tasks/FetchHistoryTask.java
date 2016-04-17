@@ -1,5 +1,6 @@
 package com.sam_chordas.android.stockhawk.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.sam_chordas.android.stockhawk.APIs.Yahoo;
+import com.sam_chordas.android.stockhawk.R;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -28,11 +30,14 @@ import java.util.ArrayList;
  */
 public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
     private static final String LOG_TAG = FetchHistoryTask.class.getSimpleName();
+    private static final String ENCODING = "UTF-8";
+    private Context mContext;
     private LineChart mChart;
 
     private OkHttpClient client = new OkHttpClient();
 
-    public FetchHistoryTask(LineChart chart) {
+    public FetchHistoryTask(Context c, LineChart chart) {
+        mContext = c;
         mChart = chart;
     }
 
@@ -69,11 +74,11 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
                                     + " where symbol = \"" + symbol + "\""
                                     + " and startDate = \"" + startDate + "\""
                                     + " and endDate = \"" + endDate + "\"",
-                            "UTF-8"));
+                            ENCODING));
             urlStringBuilder.append("&diagnostics=true&env="); // web service does not parse ampersands well...
             urlStringBuilder.append(
                     URLEncoder.encode("store://datatables.org/alltableswithkeys",
-                            "UTF-8"));
+                            ENCODING));
             urlStringBuilder.append("&format=json");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -83,14 +88,14 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
         try {
             Log.v(LOG_TAG, urlStringBuilder.toString());
             String fetchDataResponse = fetchData(urlStringBuilder.toString());
-            JSONObject jsonObject = (JSONObject) new JSONObject(fetchDataResponse).get("query");
+            JSONObject jsonObject = (JSONObject) new JSONObject(fetchDataResponse).get(Yahoo.YAHOO_JSON_FIELD_QUERY);
 
-            if (jsonObject.getInt("count") == 0)
+            if (jsonObject.getInt(Yahoo.YAHOO_JSON_FIELD_COUNT) == 0)
                 return null;
 
-            jsonObject = jsonObject.getJSONObject("results");
+            jsonObject = jsonObject.getJSONObject(Yahoo.YAHOO_JSON_FIELD_RESULTS);
 
-            results = jsonObject.getJSONArray("quote");
+            results = jsonObject.getJSONArray(Yahoo.YAHOO_JSON_FIELD_QUOTE);
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -109,18 +114,17 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
         // Add the data to our array list.
         ArrayList<String> dates = new ArrayList<>();
         ArrayList<Entry> closingValues = new ArrayList<>();
-//        for (int i = 0; i < results.length(); i++) {
         for (int i = results.length() - 1; i >= 0; i--) {
             try {
                 JSONObject jObj = results.getJSONObject(i);
 
                 // Add the date
-                dates.add(jObj.getString("Date"));
+                dates.add(jObj.getString(Yahoo.YAHOO_JSON_FIELD_DETAIL_DATE));
 
                 int index = results.length() - 1 - i;
 
                 // Add the closing cost
-                Entry e = new Entry(((float) jObj.getDouble("Close")), index);
+                Entry e = new Entry(((float) jObj.getDouble(Yahoo.YAHOO_JSON_FIELD_DETAIL_CLOSE)), index);
                 closingValues.add(e);
 
             } catch (JSONException e) {
@@ -130,7 +134,7 @@ public class FetchHistoryTask extends AsyncTask<String, Void, JSONArray> {
         }
 
         // Create data sets
-        LineDataSet closingDataSet = new LineDataSet(closingValues, "Closing Prices");
+        LineDataSet closingDataSet = new LineDataSet(closingValues, mContext.getString(R.string.history_y_axis_label));
         closingDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
 

@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.sam_chordas.android.stockhawk.APIs.Yahoo;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 
@@ -32,15 +33,15 @@ public class Utils {
         try {
             jsonObject = new JSONObject(JSON);
             if (jsonObject.length() != 0) {
-                jsonObject = jsonObject.getJSONObject("query");
-                int count = Integer.parseInt(jsonObject.getString("count"));
-                String created = jsonObject.getString("created");
+                jsonObject = jsonObject.getJSONObject(Yahoo.YAHOO_JSON_FIELD_QUERY);
+                int count = Integer.parseInt(jsonObject.getString(Yahoo.YAHOO_JSON_FIELD_COUNT));
+                String created = jsonObject.getString(Yahoo.YAHOO_JSON_FIELD_CREATED);
                 if (count == 1) {
-                    jsonObject = jsonObject.getJSONObject("results")
-                            .getJSONObject("quote");
+                    jsonObject = jsonObject.getJSONObject(Yahoo.YAHOO_JSON_FIELD_RESULTS)
+                            .getJSONObject(Yahoo.YAHOO_JSON_FIELD_QUOTE);
                     batchOperations.add(buildBatchOperation(jsonObject, created));
                 } else {
-                    resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
+                    resultsArray = jsonObject.getJSONObject(Yahoo.YAHOO_JSON_FIELD_RESULTS).getJSONArray(Yahoo.YAHOO_JSON_FIELD_QUOTE);
 
                     if (resultsArray != null && resultsArray.length() != 0) {
                         for (int i = 0; i < resultsArray.length(); i++) {
@@ -82,14 +83,14 @@ public class Utils {
         ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
                 QuoteProvider.Quotes.CONTENT_URI);
         try {
-            String change = jsonObject.getString("Change");
+            String change = jsonObject.getString(Yahoo.YAHOO_JSON_FIELD_DETAIL_CHANGE);
             if (change.equals("null")) {
                 return null;
             }
-            builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-            builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
+            builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString(Yahoo.YAHOO_JSON_FIELD_DETAIL_SYMBOL));
+            builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString(Yahoo.YAHOO_JSON_FIELD_DETAIL_BID)));
             builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
-                    jsonObject.getString("ChangeinPercent"), true));
+                    jsonObject.getString(Yahoo.YAHOO_JSON_FIELD_DETAIL_PERCENTCHANGE), true));
             builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
             builder.withValue(QuoteColumns.CREATED, created);
             builder.withValue(QuoteColumns.ISCURRENT, 1);

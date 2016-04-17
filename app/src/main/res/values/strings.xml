@@ -36,4 +36,14 @@
     <string name="a11y_percent_change">Percent Change:
         <xliff:g id="percent_change">%1$s</xliff:g>
     </string>
+    <string name="widget_empty_list_message">Try adding some stocks.</string>
+    <string name="error_invalid_cursor">This should only be called when Cursor is valid</string>
+    <string name="error_outside_cursor">Could not move Cursor to position:
+        <xliff:g id="position">%1$s</xliff:g>
+    </string>
+    <string name="error_symbol_not_found">Could not find requested stock symbol:
+        <xliff:g id="symbol">%1$s</xliff:g>
+    </string>
+    <string name="history_y_axis_label">Closing Prices</string>
+    <string name="already_present_stock_toast">This stock is already saved!</string>
 </resources>

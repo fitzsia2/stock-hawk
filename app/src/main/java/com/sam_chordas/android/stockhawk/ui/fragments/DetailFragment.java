@@ -66,7 +66,7 @@ public class DetailFragment extends Fragment implements FetchHistoryTask.Callbac
         LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.detail_fragment, container, false);
 
         // Get the current date
-        String dateFormat = "yyyy-MM-dd";
+        final String dateFormat = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
         GregorianCalendar gregToday = new GregorianCalendar(Locale.US);
         String endDate = sdf.format(gregToday.getTime());
@@ -81,7 +81,7 @@ public class DetailFragment extends Fragment implements FetchHistoryTask.Callbac
         // Find our chart and query for a years worth of data
         LineChart lc = (LineChart) ll.findViewById(R.id.line_chart_view);
         assert lc != null;
-        FetchHistoryTask fht = new FetchHistoryTask((LineChart) ll.findViewById(R.id.line_chart_view));
+        FetchHistoryTask fht = new FetchHistoryTask(getContext(), (LineChart) ll.findViewById(R.id.line_chart_view));
         fht.setCallbackCaller(this);
         fht.execute(mStockSymbol, startDate, endDate);
         lc.setDescription("");

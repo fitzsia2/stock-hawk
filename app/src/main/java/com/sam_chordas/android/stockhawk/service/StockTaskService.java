@@ -32,6 +32,10 @@ import java.net.URLEncoder;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService {
+    public static final String TAG_INIT = "init";
+    public static final String TAG_ADD = "add";
+    public static final String TAG_PERIODIC = "periodic";
+    private static final String ENCODING = "UTF-8";
     private String LOG_TAG = StockTaskService.class.getSimpleName();
     private OkHttpClient client = new OkHttpClient();
     private Context mContext;
@@ -78,7 +82,7 @@ public class StockTaskService extends GcmTaskService {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if (params.getTag().equals("init") || params.getTag().equals("periodic")) {
+        if (params.getTag().equals(TAG_INIT) || params.getTag().equals(TAG_PERIODIC)) {
             isUpdate = true;
             initQueryCursor = mContext.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                     new String[]{"Distinct " + QuoteColumns.SYMBOL}, null,
@@ -87,7 +91,7 @@ public class StockTaskService extends GcmTaskService {
                 // Init task. Populates DB with quotes for the symbols seen below
                 try {
                     urlStringBuilder.append(
-                            URLEncoder.encode("\"YHOO\",\"AAPL\",\"GOOG\",\"MSFT\")", "UTF-8"));
+                            URLEncoder.encode("\"YHOO\",\"AAPL\",\"GOOG\",\"MSFT\")", ENCODING));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -96,24 +100,24 @@ public class StockTaskService extends GcmTaskService {
                 initQueryCursor.moveToFirst();
                 for (int i = 0; i < initQueryCursor.getCount(); i++) {
                     mStoredSymbols.append("\"")
-                            .append(initQueryCursor.getString(initQueryCursor.getColumnIndex("symbol")))
+                            .append(initQueryCursor.getString(initQueryCursor.getColumnIndex(QuoteColumns.SYMBOL)))
                             .append("\",");
                     initQueryCursor.moveToNext();
                 }
                 mStoredSymbols.replace(mStoredSymbols.length() - 1, mStoredSymbols.length(), ")");
                 try {
-                    urlStringBuilder.append(URLEncoder.encode(mStoredSymbols.toString(), "UTF-8"));
+                    urlStringBuilder.append(URLEncoder.encode(mStoredSymbols.toString(), ENCODING));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             }
-        } else if (params.getTag().equals("add")) {
+        } else if (params.getTag().equals(TAG_ADD)) {
             isUpdate = false;
             // get symbol from params.getExtra and build query
-            String stockInput = params.getExtras().getString("symbol");
+            String stockInput = params.getExtras().getString(StockIntentService.BUNDLE_SYMBOL);
             Log.v(LOG_TAG, "Searching for " + stockInput);
             try {
-                urlStringBuilder.append(URLEncoder.encode("\"" + stockInput + "\")", "UTF-8"));
+                urlStringBuilder.append(URLEncoder.encode("\"" + stockInput + "\")", ENCODING));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

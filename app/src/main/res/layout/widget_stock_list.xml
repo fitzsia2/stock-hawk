@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:text="No stocks :("
+            android:text="@string/widget_empty_list_message"
             tools:layout_height="48dp"
             tools:layout_width="110dp" />
     </FrameLayout>
